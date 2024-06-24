@@ -5,13 +5,17 @@ import {
   Param,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { LoginCustomerDto } from './dto/login-customer.dto';
 import { ResponseInterface } from 'src/utils/interfaces/commonInterface';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { PaymentDto } from './dto/payment.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AddBookDto } from './dto/add-book.dto';
 
 @Controller('book')
 export class BookController {
@@ -21,6 +25,18 @@ export class BookController {
   @Post('login')
   login(@Body() loginUserDto: LoginCustomerDto): Promise<ResponseInterface> {
     return this.bookService.login(loginUserDto);
+  }
+
+  //Add Book API.
+  // Guards for authorization.
+  @UseGuards(JwtAuthGuard)
+  @Post('add-book')
+  @UseInterceptors(FileInterceptor('file'))
+  addBook(
+    @Body() addBookDto: AddBookDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<ResponseInterface> {
+    return this.bookService.addBook(addBookDto, file);
   }
 
   // Customer can view all books.

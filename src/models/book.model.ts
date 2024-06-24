@@ -13,6 +13,9 @@ export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  book_image: string;
+
   @Column()
   book_title: string;
 

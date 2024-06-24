@@ -6,6 +6,8 @@ import { CustomerDetails } from 'src/models/customerDetails.model';
 import { JwtModule } from '@nestjs/jwt';
 import { Book } from 'src/models/book.model';
 import { RentalBook } from 'src/models/rentalBook.model';
+import { MulterModule } from '@nestjs/platform-express';
+import { storageConfig } from 'src/utils/multerStorage';
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { RentalBook } from 'src/models/rentalBook.model';
       secret: 'JWTPrivateKey', // secret key for authnentication and use this secret key for authorization.
       signOptions: { expiresIn: '5h' }, // Here, Given expires time for token.
     }),
+    MulterModule.register(storageConfig),
   ],
   controllers: [BookController],
   providers: [BookService],

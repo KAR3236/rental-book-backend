@@ -17,6 +17,7 @@ import { RentalBook } from 'src/models/rentalBook.model';
 import Stripe from 'stripe';
 import { PaymentStatus } from 'src/utils/enum';
 import { PaymentDto } from './dto/payment.dto';
+import { AddBookDto } from './dto/add-book.dto';
 
 @Injectable()
 export class BookService {
@@ -77,6 +78,29 @@ export class BookService {
       return handelResponse({
         statusCode: 500,
         message: error.message,
+      });
+    }
+  }
+
+  async addBook(dto: AddBookDto, file: Express.Multer.File) {
+    try {
+      if (file) {
+        const bookData: any = await this.bookModel.save({
+          ...dto,
+          book_image: file.filename,
+        });
+
+        if (bookData) {
+          return handelResponse({
+            statusCode: 201,
+            message: `Book ${message.ADDED_SUCCESSFULLY}`,
+          });
+        }
+      }
+    } catch (error) {
+      return handelResponse({
+        statusCode: 500,
+        message: message.PLEASE_TRY_AGAIN,
       });
     }
   }

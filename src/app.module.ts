@@ -8,6 +8,8 @@ import { BookModule } from './book/book.module';
 import { Book } from './models/book.model';
 import { RentalBook } from './models/rentalBook.model';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 type Dialect = 'postgres';
 
@@ -26,6 +28,9 @@ type Dialect = 'postgres';
       database: process.env.DBNAME,
       entities: [CustomerDetails, Book, RentalBook],
       synchronize: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', './upload'),
     }),
     BookModule,
     AuthModule,
